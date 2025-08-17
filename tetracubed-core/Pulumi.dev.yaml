@@ -1,0 +1,36 @@
+config:
+  aws:region: eu-west-2
+  tetracubed-core:environment: dev
+  tetracubed-core:vpc_cidr: "10.0.0.0/16"
+  tetracubed-core:cluster_name: tetracubed-cluster
+  tetracubed-core:cpu: "4096"
+  tetracubed-core:memory: "16384"
+  tetracubed-core:cpu_architecture: "ARM64"
+  tetracubed-core:minecraft_version: "1.21.8"
+  tetracubed-core:minecraft_max_players: "6"
+  tetracubed-core:difficulty: "hard"
+  tetracubed-core:startup_commands:
+    - "gamerule mobGriefing false"
+    - "gamerule keepInventory true"
+    - "gamerule doImmediateRespawn true"
+  tetracubed-core:modrinth_projects:
+    - "distanthorizons:9yaYzpcr"
+    - "lithostitched:ROo8a9VV"
+    - "terralith"
+    - "tectonic"
+    - "fabric-api"
+    - "lithium"
+    - "ferrite-core"
+    - "collective"
+    - "tree-harvester"
+    - "c2me-fabric"
+    - "worldedit"
+    - "melius-essentials"
+  tetracubed-core:s3_bucket_arn:
+    secure: AAABACCr7FfPAt87I/R9LttwdM8BVbYS09oq+6DhedVv5c2alMnbBKBXwNSSBpphsZuClnw=
+  tetracubed-core:datasync_s3_bucket_access_role:
+    secure: AAABADQmvVglPUfC6cz1S0Di0u3/zo7ct5WGhF1AzgYys90VLngfGFvjBT8onJKRHIpMTtMvaFrQD/6I12ZhJkmDEPLpE7szQC+F7fsuHMEAxlKCtZgMjzTg+cjrUs4AWQ2ikPLRCcheahOPEOCeM19EkPUnmTMSZCa9Q0O2FXXp
+  tetracubed-core:s3_bucket_name:
+    secure: AAABAM1V1u6uXCSUKChxqedw11YZ/Ck7FAnjcE+xVRIsrTbsMrWaCzaQoNfkUHpYjcaUiG8=
+  tetracubed-core:ops_list:
+    secure: AAABAEUYUYvTXQke0YFXuTF4NQQm3VyDhIGqlQbZF4rldJRrT9SWcMV5vFfDTa5XKkC0hWCAg2Mei1iep9XopGBlSsLH8STPBZ1UIpM=
