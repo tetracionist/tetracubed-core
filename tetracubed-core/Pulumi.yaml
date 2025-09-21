@@ -3,6 +3,7 @@ description: Tetracubed Minecraft Infrastructure On AWS
 runtime:
   name: python
   options:
+    python: python
     toolchain: uv
 config:
   pulumi:tags:
