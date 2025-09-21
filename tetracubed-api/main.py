@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from pulumi import automation as auto
+from pulumi.automation import RemoteStack
 from loguru import logger
 from datasync import execute_datasync_task
 from ecs_service import start_ecs_service, stop_ecs_service
@@ -16,6 +16,8 @@ import json
 import requests
 
 from pwdlib import PasswordHash
+from pulumi.automation import select_remote_stack_git_source, RemoteWorkspaceOptions
+import time 
 
 import os
 
@@ -137,14 +139,27 @@ async def tetracubed_start(current_user: str = Depends(get_current_user)):
 
     requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": "Provisioning Tetracubed Server...", "username": "Tetracubed-Fox"})
     try: 
-        stack = auto.select_stack(
-            stack_name=os.getenv("PULUMI_STACK_NAME"), work_dir=tetracubed_dir
-        )
+        stack = select_remote_stack_git_source(
+            stack_name = os.getenv("PULUMI_STACK_NAME"),
+            url=os.getenv("GIT_SOURCE_REPO_URL"),
+            branch="main",
+            project_path="tetracubed-core/",
+            opts=RemoteWorkspaceOptions(env_vars={
+                "AWS_ACCESS_KEY_ID": os.environ["AWS_ACCESS_KEY_ID"],
+                "AWS_SECRET_ACCESS_KEY": os.environ["AWS_SECRET_ACCESS_KEY"],
+                "AWS_DEFAULT_REGION": os.environ["AWS_DEFAULT_REGION"],
+        }))
 
-        stack.set_config("aws:region", auto.ConfigValue(value="eu-west-2"))
-        stack.workspace.install_plugin("aws", "7.3.1")
-        result = stack.up(on_output=print)
-        print("Update summary:", result.summary.resource_changes)
+        stack.up()
+
+        while True:
+            print("awaiting state change")
+            stack_state = stack.history(page_size=1)[0].result
+            if stack.history(page_size=1)[0].result in ["succeeded", "failed"]:
+                print(stack_state)
+                break
+
+            time.sleep(30)
 
         outputs = stack.outputs()
         logger.info(outputs)
@@ -181,9 +196,17 @@ def tetracubed_stop(current_user: str = Depends(get_current_user)):
 
     requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": "Deprovisioning Tetracubed Server...", "username": "Tetracubed-Fox"})
     try: 
-        stack = auto.select_stack(
-            stack_name=os.getenv("PULUMI_STACK_NAME"), work_dir=tetracubed_dir
-        )
+        stack = select_remote_stack_git_source(
+            stack_name = os.getenv("PULUMI_STACK_NAME"),
+            url=os.getenv("GIT_SOURCE_REPO_URL"),
+            branch="main",
+            project_path="tetracubed-core/",
+            opts=RemoteWorkspaceOptions(env_vars={
+                "AWS_ACCESS_KEY_ID": os.environ["AWS_ACCESS_KEY_ID"],
+                "AWS_SECRET_ACCESS_KEY": os.environ["AWS_SECRET_ACCESS_KEY"],
+                "AWS_DEFAULT_REGION": os.environ["AWS_DEFAULT_REGION"],
+            }))
+
 
         outputs = stack.outputs()
 
@@ -198,8 +221,16 @@ def tetracubed_stop(current_user: str = Depends(get_current_user)):
 
         requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": "Destroying Infrastructure...", "username": "Tetracubed-Fox"})
 
-        result = stack.destroy(on_output=print)
-        print("Update summary:", result.summary.resource_changes)
+        stack.destroy(on_output=print)
+
+        while True:
+            print("awaiting state change")
+            stack_state = stack.history(page_size=1)[0].result
+            if stack.history(page_size=1)[0].result in ["succeeded", "failed"]:
+                print(stack_state)
+                break
+
+            time.sleep(30)
 
         requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": "Tetracubed Has Been Successfully Deprovisioned!", "username": "Tetracubed-Fox"})
     except Exception as e:
