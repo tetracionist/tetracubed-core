@@ -28,7 +28,6 @@ config:
     - "worldedit"
     - "melius-essentials"
     - "nullscape"
-    - "thgw"
   tetracubed-core:s3_bucket_arn:
     secure: AAABACCr7FfPAt87I/R9LttwdM8BVbYS09oq+6DhedVv5c2alMnbBKBXwNSSBpphsZuClnw=
   tetracubed-core:datasync_s3_bucket_access_role:
