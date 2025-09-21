@@ -152,6 +152,10 @@ async def tetracubed_start(current_user: str = Depends(get_current_user)):
 
         stack.up()
 
+        deployment_url = stack.history(page_size=1)[0].environment["ci.build.url"]
+
+        requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": f"Deployment Requested: {deployment_url} ", "username": "Tetracubed-Fox"})
+
         while True:
             print("awaiting state change")
             stack_state = stack.history(page_size=1)[0].result
@@ -222,6 +226,10 @@ def tetracubed_stop(current_user: str = Depends(get_current_user)):
         requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": "Destroying Infrastructure...", "username": "Tetracubed-Fox"})
 
         stack.destroy(on_output=print)
+
+        deployment_url = stack.history(page_size=1)[0].environment["ci.build.url"]
+
+        requests.post(os.getenv("DISCORD_WEBHOOK_URL"), {"content": f"Destroy Requested: {deployment_url} ", "username": "Tetracubed-Fox"})
 
         while True:
             print("awaiting state change")
