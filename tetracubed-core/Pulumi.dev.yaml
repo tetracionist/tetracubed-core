@@ -6,7 +6,7 @@ config:
   tetracubed-core:cpu: "4096"
   tetracubed-core:memory: "16384"
   tetracubed-core:cpu_architecture: "ARM64"
-  tetracubed-core:minecraft_version: "1.21.8"
+  tetracubed-core:minecraft_version: "1.21.10"
   tetracubed-core:minecraft_max_players: "6"
   tetracubed-core:difficulty: "hard"
   tetracubed-core:startup_commands:
@@ -14,9 +14,9 @@ config:
     - "gamerule keepInventory true"
     - "gamerule doImmediateRespawn true"
   tetracubed-core:modrinth_projects:
-    - "distanthorizons:9yaYzpcr"
-    - "lithostitched:ROo8a9VV"
-    - "incendium:eTXZb5Wq"
+    - "distanthorizons:9Y10ZuWP"
+    - "lithostitched"
+    - "incendium:PovCtpuw"
     - "terralith"
     - "tectonic"
     - "fabric-api"
